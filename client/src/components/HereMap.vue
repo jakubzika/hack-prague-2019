@@ -45,6 +45,7 @@ export default {
     this.location = null;
 
     navigator.geolocation.watchPosition(cord => {
+      console.log(cord);
       if (!this.location) {
         this.location = {lat:cord.coords.latitude,lng:cord.coords.longitude};
         this.axios({
@@ -56,20 +57,19 @@ export default {
             containers:[1].join(','),
           }
         }).then((data)=>{
-          console.log(data);
-          // for(location in data.data){
-          //   console.log('adding marker')
-          //   let marker = new H.map.Marker({lat:location.coordinates[0], lng:location.coordinates[0]});
-          //   this.map.addObject(marker);
-          // }
+          let containers = data.data.data;
+          // console.log(containers);
+          for(let i = 0; i < containers.length;i++){
+            let marker = new H.map.Marker({lat:containers[i].coordinates[0], lng:containers[i].coordinates[1]});
+            this.map.addObject(marker);
+          }
           }).catch((err)=>{console.log('error occured',err)})
       }
-
-      this.map.setCenter({
-        lat: cord.coords.latitude,
-        lng: cord.coords.longitude
-      });
-      this.map.setZoom(17);
+      // this.map.setCenter({
+      //   lat: cord.coords.latitude,
+      //   lng: cord.coords.longitude
+      // });
+      // this.map.setZoom(17);
     });
   }
 };
