@@ -1,10 +1,10 @@
 from flask import Flask, request
 from analytics import parseContainers,getDistance,getLocationsInRange
 import json
-
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 print("...")
 
 containerData = []
@@ -28,5 +28,5 @@ def getConainers():
     return json.dumps({'data':locations})
 
 if __name__ == "__main__":
-    containerData = parseContainers('data/containers.json')
+    containerData = parseContainers('data/containers-data.json')
     app.run(host="0.0.0.0")
