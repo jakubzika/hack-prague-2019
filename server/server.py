@@ -16,6 +16,7 @@ containerData = []
 def getConainers():
     lat = request.args.get('lat')
     lng = request.args.get('lng')
+    print('request with coordinates\nlat:{0}\nlng:{1}\n',lat,lng)
     containers = request.args.get('containers').split(',')
     for i in range(len(containers)):
         containers[i] = int(containers[i])
@@ -24,9 +25,8 @@ def getConainers():
     locations = getLocationsInRange((lat,lng),containerData,300,containers)
     for location in range(len(locations)):
         locations[location]['types'] = list(locations[location]['types'])
-    return json.dumps(locations)
+    return json.dumps({'data':locations})
 
 if __name__ == "__main__":
-    print('parsing')
     containerData = parseContainers('data/containers.json')
-    app.run()
+    app.run(host="0.0.0.0")
