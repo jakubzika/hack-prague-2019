@@ -81,15 +81,20 @@ export default {
     return this.cur = this.containers[0]
   },
   mounted() {
-    this.$watchLocation()
-    .then(coordinates => {
-      return this.cord = coordinates
-    })
-    .catch(err => {
-      if (err === 'no position access') {
-        alert('To use your service, allow location access')
-      }
-    })
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          return this.cord = pos.coords
+        }, err => {
+          console.log(err)
+          return
+        }, {
+            enableHighAccuracy : true,
+            timeout : 60000,
+            maximumAge : 0
+        });
+    } else {
+        alert("Your phone does not support the Geolocation API");
+    }
   },
   computed: {
     checked: {
@@ -104,12 +109,12 @@ export default {
         if (e.check) { res.push(e.enum) }
       })
       if (res.length != '0') { 
-        this.$route.push({
+        router.push({
           path: '/map',
           query: {
             containers: res,
-            lat: this.cord.lat,
-            lng: this.cord.lng
+            lat: this.cord.latitude,
+            lng: this.cord.longitude
           }
         })
       }
@@ -136,14 +141,18 @@ export default {
 
 <style scoped>
 img {
-  width: 100%;
+  width: 40%;
+  min-width: 200px;
   height: 100%;
   object-fit: contain;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
 }
 
 .container {
   display: flex;
-  flex: 1;
   height: calc(100% - 79px);
   position: relative;
   padding-bottom: 50px;
