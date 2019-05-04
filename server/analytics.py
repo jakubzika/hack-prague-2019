@@ -20,26 +20,46 @@ def determineContainerType(type):
         return 5
     
 
-def parseContainers(filename):
-    content = ''
-    with open(filename,'r',encoding='utf-8') as f:
+def parseContainers(containersFileName,locationsFilename):
+    locationsPublic = parseLocations(locationsFilename)
+    with open(containersFileName,'r',encoding='utf-8') as f:
         data = json.loads(f.read())['features']
     locationId = 0
     location = None
-    locations = []
+    locations = {}
+    index = 0
     for container in data:
         if(locationId != container['properties']['STATIONID']):
             if(location):
-                locations.append(location)
+                location['types'] = set(location['types'])
+                locations[locationId] = location
             locationId = container['properties']['STATIONID']
             location = {
                 'id':locationId,
                 'coordinates': (container['geometry']['coordinates'][1],container['geometry']['coordinates'][0]),
                 'types': set(),
+                'public': locationsPublic[locationId]['public'],
                 }
+            index += 1
+
         location['types'].add(types[container['properties']['TRASHTYPENAME']])
 
     return locations
+
+def parseLocations(filename):
+    data = {}
+    with open(filename,'r',encoding='utf-8') as f:
+        data = json.loads(f.read())['features']
+    
+    locations = {}
+    for location in data:
+        locations[location['properties']['ID']] = {
+            'id': location['properties']['ID'],
+            'public':  True if location['properties']['PRISTUP'] == 'volně' else False,
+        }
+    # locationsSorted = sorted(locations, key=lambda k: k['id'])  
+    return locations
+    
 
 def getDistance(src,dest):
     # approximate radius of earth in km
@@ -49,8 +69,8 @@ def getLocationsInRange(src,containerData,range,types):
     locationsInRange = []
     range = range/1000
     for location in containerData:
-        distanceLength = distance.distance(src,location['coordinates']).km
+        distanceLength = distance.distance(src,location[1]['coordinates']).km
         if(distanceLength <= range):
-            if(types.issubset(location['types'])):
-                locationsInRange.append(location)
+            if(types.issubset(location[1]['types'])):
+                locationsInRange.append(location[1])
     return locationsInRange

@@ -9,9 +9,6 @@ print("...")
 
 containerData = []
 
-
-    
-
 @app.route("/get-containers",methods=['GET'])
 def getConainers():
     lat = request.args.get('lat')
@@ -22,11 +19,16 @@ def getConainers():
         containers[i] = int(containers[i])
     containers = set(containers)
     print(containers)
-    locations = getLocationsInRange((lat,lng),containerData,300,containers)
+    locations = getLocationsInRange((lat,lng),containerData,1000,containers)
+
     for location in range(len(locations)):
         locations[location]['types'] = list(locations[location]['types'])
+
     return json.dumps({'data':locations})
 
 if __name__ == "__main__":
-    containerData = parseContainers('data/containers-data.json')
+    containerData = parseContainers('data/containers-data.json','data/containers-locations-data.json').items()
+    # print(containerData)
+    # for item in containerData:
+    #     print(item)
     app.run(host="0.0.0.0")
