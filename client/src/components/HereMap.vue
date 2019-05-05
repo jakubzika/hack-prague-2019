@@ -16,7 +16,8 @@ export default {
       platform: {},
       location: {},
       containers: {},
-      geoLoc: {}
+      geoLoc: {},
+      firstTime: false
     };
   },
   props: {
@@ -34,8 +35,14 @@ export default {
   },
   watch: {
     show(x) {
-      if (x) { return this.updatePosition() }
-      else { navigator.geolocation.clearWatch(this.geoLoc) }
+      if (x) { 
+        this.firstTime = true
+        return this.updatePosition() 
+      }
+      else { 
+        navigator.geolocation.clearWatch(this.geoLoc)
+        this.firstTime = false
+      }
     }
   },
   methods: {
@@ -51,7 +58,10 @@ export default {
       });
       var events = new H.mapevents.MapEvents(this.map);
       var behavior = new H.mapevents.Behavior(events);
-      if (this.show) { return this.updatePosition }
+      if (this.show) {
+        this.firstTime = true
+        return this.updatePosition 
+      }
     },
     updatePosition() {
       let me = null
@@ -64,14 +74,14 @@ export default {
         if (me) { this.map.removeObject(me) }
         me = new H.map.Marker(coords, {icon: icon});
         this.map.addObject(me);
-        if (!this.show) {
+        if (this.show && this.firstTime) {
           this.axios({
             url:'http://localhost:5000/get-containers',
             method: 'get',
             params: {
-              lat: this.curPos.lat,
-              lng: this.curPos.lng,
-              containers:[1].join(','),
+              lat: this.$route.query.lat,
+              lng: this.$route.query.lng,
+              containers:this.$route.query.containers
             }
           }).then((data)=>{
             this.containers = data.data.data;
