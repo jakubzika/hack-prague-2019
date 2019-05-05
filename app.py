@@ -31,7 +31,7 @@ def getConainers():
     return json.dumps({'data':locations})
 
 if __name__ == "__main__":
-    containerData = parseContainers('data/containers-data.json','data/containers-locations-data.json').items()
+    containerData = parseContainers('server/data/containers-data.json','server/data/containers-locations-data.json').items()
     # print(containerData)
     # for item in containerData:
     #     print(item)
