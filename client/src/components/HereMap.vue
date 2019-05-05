@@ -120,19 +120,20 @@ export default {
         this.map.addObject(me);
         if (this.show && this.firstTime) {
           this.axios({
-            url: "http://localhost:5000/get-containers",
+            url: "http://192.168.81.74:5000/get-containers",
             method: "get",
             params: {
               lat: this.curPos.lat,
               lng: this.curPos.lng,
-              containers: [1].join(",")
+              containers: this.$route.query.containers
             }
           })
             .then(data => {
               let containers = data.data.data;
               // console.log(containers);
+              console.log('PUBLIC',this.$route.query.public);
               for (let i = 0; i < containers.length; i++) {
-                if(!this.public) {
+                if(this.$route.query.public == 'false' ||this.$route.query.public == false) {
                   this.addToGroup(
                     {
                       lat: containers[i].coordinates[0],
@@ -141,7 +142,7 @@ export default {
                     generateMarkerBlob(containers[i]),
                   );
                 }
-                else if(!(containers[i].public)) {
+                else if((containers[i].public)) {
                   this.addToGroup(
                     {
                       lat: containers[i].coordinates[0],
