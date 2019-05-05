@@ -9,7 +9,7 @@
         :show=showMap
       />
     </div>
-    <div class="pick" :class="removeOverlay">
+    <div v-if="!showMap" class="pick" :class="removeOverlay">
       <button class="arrow" @click="nextLeft()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
       </button>
@@ -47,7 +47,7 @@ export default {
           enum: "1"
         },
         {
-          src: "electric-devices",
+          src: "electronic-devices",
           name: " Electric devices",
           check: false,
           enum: "2"
