@@ -1,6 +1,7 @@
 from math import sin, cos, sqrt, atan2, radians
 from geopy import distance
 
+import copy
 import json
 
 types ={
@@ -68,9 +69,23 @@ def getDistance(src,dest):
 def getLocationsInRange(src,containerData,range,types):
     locationsInRange = []
     range = range/1000
+    lowestDistance = 999999
+    lowestDistanceId = 0
+    index = 0
     for location in containerData:
         distanceLength = distance.distance(src,location[1]['coordinates']).km
         if(distanceLength <= range):
             if(types.issubset(location[1]['types'])):
-                locationsInRange.append(location[1])
-    return locationsInRange
+                locationInRange = copy.deepcopy(location[1])
+                locationInRange['distance'] = round(distanceLength*1000)
+                locationsInRange.append(locationInRange)
+                if(distanceLength < lowestDistance):
+                    lowestDistance = distanceLength
+                    lowestDistanceId = index
+                index += 1
+    locationsInRangeSorted = sorted(locationsInRange, key=lambda k: k['distance']) 
+    print('locs',locationsInRangeSorted)
+    for loc in locationsInRangeSorted:
+        print(loc['distance'])
+
+    return locationsInRangeSorted
