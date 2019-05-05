@@ -1,0 +1,74 @@
+{
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            14.4652034170001,
+            50.0670424130001
+          ]
+        },
+        "properties": {
+          "id": 1521,
+          "station_number": "0010/ 171",
+          "name": "Tádžická 1424/2",
+          "district": "praha-10",
+          "accessibility": {
+            "description": "volně",
+            "id": 1
+          },
+          "containers": [
+            {
+              "trash_type": {
+                "description": "Nápojové kartóny",
+                "id": 4
+              },
+              "cleaning_frequency": 21,
+              "container_type": "1100 normální HV"
+            },
+            {
+              "trash_type": {
+                "description": "Papír",
+                "id": 5
+              },
+              "cleaning_frequency": 13,
+              "container_type": "1100 normální HV"
+            },
+            {
+              "trash_type": {
+                "description": "Barevné sklo",
+                "id": 1
+              },
+              "cleaning_frequency": 21,
+              "container_type": "1500 M 1,5 SV"
+            },
+            {
+              "trash_type": {
+                "description": "Plast",
+                "id": 6
+              },
+              "cleaning_frequency": 14,
+              "container_type": "1100 normální HV"
+            },
+            {
+              "trash_type": {
+                "description": "Textil",
+                "id": 8
+              },
+              "cleaning_frequency": null,
+              "container_type": null,
+              "company": {
+                "phone": "224 316 800, 491 524 342",
+                "email": "diakonie@diakoniebroumov.org",
+                "web": "http://www.diakoniebroumov.org",
+                "name": "Diakonie Broumov"
+              },
+              "description": "u stanoviště separace"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "FeatureCollection"
+  }
