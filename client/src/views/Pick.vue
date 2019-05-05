@@ -1,28 +1,42 @@
 <template>
   <div class="container">
-    <button class="arrow" @click="nextLeft()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-    </button>
-    <div class="img-container">
-      <img v-bind:src="require(`@/assets/trash/${cur.src}.png`)" v-bind:alt="cur.name">
+    <div class="map">
+      <HereMap
+        appId="Muta3a1pg63jJhHuVmZP"
+        appCode="eNMUIwEeBhtuXRuzmmgJhw"
+        width="100%"
+        height="100%"
+        :show=showMap
+      />
     </div>
-    <div class="bottom-nav">
-      <input type="checkbox" v-model="checked">
-      <button class="send" @click="send">Send</button>
+    <div class="pick" :class="removeOverlay">
+      <button class="arrow" @click="nextLeft()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+      </button>
+      <div class="img-container">
+        <img v-bind:src="require(`@/assets/trash/${cur.src}.png`)" v-bind:alt="cur.name">
+      </div>
+      <div class="bottom-nav">
+        <input type="checkbox" v-model="checked">
+        <button class="send" @click="send">Send</button>
+      </div>
+      <button class="arrow" @click="nextRight()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+      </button>
     </div>
-    <button class="arrow" @click="nextRight()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-    </button>
   </div>
 </template>
 
 <script>
 import { constants } from 'fs';
 import router from '../router'
+import HereMap from "../components/HereMap.vue"
 
 export default {
+  components: { HereMap },
   data: () => {
     return {
+      showMap: false,
       cord: null,
       cur: null,
       containers: [
@@ -81,25 +95,38 @@ export default {
     return this.cur = this.containers[0]
   },
   mounted() {
+    if (Object.keys(this.$route.query).length !== 0) {
+      this.showMap = true
+    }
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          return this.cord = pos.coords
-        }, err => {
-          console.log(err)
-          return
-        }, {
-            enableHighAccuracy : true,
-            timeout : 60000,
-            maximumAge : 0
-        });
+      navigator.geolocation.getCurrentPosition(pos => {
+        return this.cord = pos.coords
+      }, err => {
+        console.log(err)
+        return
+      }, {
+        enableHighAccuracy : true,
+        timeout : 60000,
+        maximumAge : 0
+      });
     } else {
-        alert("Your phone does not support the Geolocation API");
+      alert("Your phone does not support the Geolocation API");
     }
   },
   computed: {
     checked: {
       get() { return this.cur.check },
       set() { return this.cur.check = !this.cur.check }
+    },
+    removeOverlay: function() {
+      return this.showMap ? 'invisible' : 'visible'
+    }
+  },
+  watch: {
+    '$route.query': function(query) {
+      if (query) {
+        this.showMap = !this.showMap
+      }
     }
   },
   methods: {
@@ -110,7 +137,7 @@ export default {
       })
       if (res.length != '0') { 
         router.push({
-          path: '/map',
+          path: '/',
           query: {
             containers: res,
             lat: this.cord.latitude,
@@ -155,7 +182,20 @@ img {
   display: flex;
   height: calc(100% - 79px);
   position: relative;
+}
+
+.pick {
+  display: flex;
+  width: 100%;
+  height: 100%;
   padding-bottom: 50px;
+  position: absolute;
+}
+
+.map {
+  display: flex;
+  flex: 1;
+  position: relative;
 }
 
 .img-container {
@@ -231,6 +271,16 @@ input[type=checkbox]:checked:after {
   position: absolute;
   top: 0;
   left: 9px;
+}
+
+.visible {
+  z-index: 3;
+  background: #f7f7f7;
+}
+
+.invisible {
+  opacity: 0;
+  z-index: -1
 }
 
 </style>

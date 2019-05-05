@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { constants } from 'fs';
 export default {
   name: "HereMap",
   data() {
@@ -15,20 +16,27 @@ export default {
       platform: {},
       location: {},
       containers: {},
-      firstTime: null,
+      geoLoc: {}
     };
   },
   props: {
     appId: String,
     appCode: String,
     width: String,
-    height: String
+    height: String,
+    show: Boolean
   },
   created() {
     this.platform = new H.service.Platform({
       app_id: this.appId,
       app_code: this.appCode
     });
+  },
+  watch: {
+    show(x) {
+      if (x) { return this.updatePosition() }
+      else { navigator.geolocation.clearWatch(this.geoLoc) }
+    }
   },
   methods: {
     createMap() {
@@ -43,11 +51,11 @@ export default {
       });
       var events = new H.mapevents.MapEvents(this.map);
       var behavior = new H.mapevents.Behavior(events);
-      this.updatePosition()
+      if (this.show) { return this.updatePosition }
     },
     updatePosition() {
       let me = null
-      navigator.geolocation.watchPosition(cord => {
+      this.geoLoc = navigator.geolocation.watchPosition(cord => {
         console.log(cord);
         this.curPos = {lat:cord.coords.latitude,lng:cord.coords.longitude};
         let svgMarkup = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
@@ -56,7 +64,7 @@ export default {
         if (me) { this.map.removeObject(me) }
         me = new H.map.Marker(coords, {icon: icon});
         this.map.addObject(me);
-        if (!this.firstTime) {
+        if (!this.show) {
           this.axios({
             url:'http://localhost:5000/get-containers',
             method: 'get',
@@ -66,10 +74,10 @@ export default {
               containers:[1].join(','),
             }
           }).then((data)=>{
-            let containers = data.data.data;
+            this.containers = data.data.data;
             // console.log(containers);
-            for(let i = 0; i < containers.length;i++){
-              let marker = new H.map.Marker({lat:containers[i].coordinates[0], lng:containers[i].coordinates[1]});
+            for(let i = 0; i < this.containers.length;i++){
+              let marker = new H.map.Marker({lat:this.containers[i].coordinates[0], lng:this.containers[i].coordinates[1]});
               this.map.addObject(marker);
             }
             }).catch((err)=>{console.log('error occured',err)})
@@ -104,6 +112,7 @@ export default {
 .here-map {
   display: flex;
   height: 100%;
+  width: 100%;
 }
 
 .backHome {
