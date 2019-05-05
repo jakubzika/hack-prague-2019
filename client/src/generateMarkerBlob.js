@@ -13,7 +13,8 @@ let containerInfo = {
 export function generateMarkerBlob(container) {
     console.log('blob',container);
     let blob = '<div>';
-    blob += `<div class="header">Containers</div>`
+    blob += `<div class="header">Containers `
+    blob += `<span class="distance">${container.distance}</span> meters away</div>`
     for(let i =0; i < container.types.length;i++) {
         console.log(container.types[i]);
         blob += '<div>'

@@ -43,11 +43,14 @@
 
 .containerBlob>div:nth-child(1){
     padding:15px;
-    width:12em; 
+    padding-top: 8px;
+    width:20em; 
     background-color: white;
-    border: solid 1px black;
+    border: solid 3px black;
+    border-radius: 0;
     color: black;
     font-family: Sepmlicita;
+    margin-bottom: 16px;
 
 }
 
@@ -55,9 +58,16 @@
     margin-left: 8px;
 }
 .containerBlob .header {
+    text-decoration: underline;
     font-weight: bold;
+    margin-bottom: 6px;
 }
 
 .H_ib_close .H_icon{
     fill: black;
+}
+
+.containerBlob .distance{
+    font-weight: bold;
+    color: #00aa88ff;
 }
