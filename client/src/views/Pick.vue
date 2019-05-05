@@ -17,8 +17,12 @@
         <img v-bind:src="require(`@/assets/trash-svg/${cur.src}.svg`)" v-bind:alt="cur.name">
       </div>
       <div class="bottom-nav">
+        <div class="input-public">
+          <button :class="activePublic" @click="toggleButton">Public</button>
+          <button :class="activePrivate" @click="toggleButton">Private</button>
+        </div>
         <input type="checkbox" v-model="checked">
-        <button class="send" @click="send">Send</button>
+        <button class="send" @click="send">Find</button>
       </div>
       <button class="arrow" @click="nextRight()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
@@ -36,6 +40,7 @@ export default {
   components: { HereMap },
   data: () => {
     return {
+      public: true,
       showMap: false,
       cord: null,
       cur: null,
@@ -120,7 +125,14 @@ export default {
     },
     removeOverlay: function() {
       return this.showMap ? 'invisible' : 'visible'
+    },
+    activePublic: function() {
+      return this.public ? 'active' : ''
+    },
+    activePrivate: function() {
+      return this.public ? 'inactive' : 'active'
     }
+
   },
   watch: {
     '$route.query': function(query) {
@@ -130,6 +142,9 @@ export default {
     }
   },
   methods: {
+    toggleButton() {
+      this.public = !this.public
+    },
     send() {
       let res = []
       this.containers.map(e => {
@@ -140,6 +155,7 @@ export default {
           path: '/',
           query: {
             containers: res.join(','),
+            public: this.public,
             lat: this.cord.latitude,
             lng: this.cord.longitude
           }
@@ -176,7 +192,7 @@ img {
   left: 50%;
   transform: translateX(-50%);
   z-index: -1;
-  padding-bottom: 50px;
+  padding-bottom: 80px;
 }
 
 .container {
@@ -218,9 +234,8 @@ img {
   font-size: 1.3em;
   align-self: flex-start;
   border: 5px solid rgb(37, 37, 37);
-  margin: auto;
   color: rgb(37, 37, 37);
-  margin-left: 50px;
+  margin: auto;
 }
 
 .send:hover {
@@ -243,7 +258,7 @@ button svg:hover {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20%;
+  bottom: 15%;
   z-index: 1;
   display: flex;
   white-space: nowrap;
@@ -251,20 +266,20 @@ button svg:hover {
 
 input {
   position: relative;
-  margin: auto;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  margin: auto 15px;
 }
 
 input[type=checkbox]:before {
   content: "";
   display: block;
   position: absolute;
-  width: 30px;
-  height: 30px;
-  bottom: 0;
-  left: 0;
+  width: 40px;
+  height: 40px;
+  bottom: -3px;
+  left: -3px;
   border: 4px solid #2c2a2a;
   background-color: white;
 }
@@ -272,16 +287,33 @@ input[type=checkbox]:before {
 input[type=checkbox]:checked:after {
   content: "";
   display: block;
-  width: 10px;
-  height: 17px;
-  border: solid rgb(53, 52, 52);
-  border-width: 0 5px 5px 0;
+  width: 14px;
+  height: 22px;
+  border: solid rgb(25, 168, 101);
+  border-width: 0 7px 7px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
   position: absolute;
   top: 0;
   left: 9px;
+}
+.input-public {
+  display: flex;
+  align-items: flex-start;
+}
+
+.input-public button{
+  margin: auto;
+  background: white;
+  border: 4px solid rgb(37, 37, 37);
+  padding: 5px 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.input-public button:first-child {
+  border-right: none;
 }
 
 .visible {
@@ -294,4 +326,8 @@ input[type=checkbox]:checked:after {
   z-index: -1
 }
 
+.active {
+  background: black!important;
+  color: white;
+}
 </style>

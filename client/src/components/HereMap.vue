@@ -31,7 +31,8 @@ export default {
     appCode: String,
     width: String,
     height: String,
-    show: Boolean
+    show: Boolean,
+    public: Boolean
   },
   created() {
     this.platform = new H.service.Platform({
@@ -131,10 +132,7 @@ export default {
               let containers = data.data.data;
               // console.log(containers);
               for (let i = 0; i < containers.length; i++) {
-                if (containers[i].public) {
-                  // let marker = new H.map.Marker({lat:containers[i].coordinates[0], lng:containers[i].coordinates[1]});
-                  if(containers[i].public) {
-                    
+                if(!this.public) {
                   this.addToGroup(
                     {
                       lat: containers[i].coordinates[0],
@@ -142,7 +140,15 @@ export default {
                     },
                     generateMarkerBlob(containers[i]),
                   );
-                  } 
+                }
+                else if(!(containers[i].public)) {
+                  this.addToGroup(
+                    {
+                      lat: containers[i].coordinates[0],
+                      lng: containers[i].coordinates[1]
+                    },
+                    generateMarkerBlob(containers[i]),
+                  );
                 }
               }
             })
