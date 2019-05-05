@@ -9,6 +9,10 @@ print("...")
 
 containerData = []
 
+@app.route('/',methods=['GET'])
+def indexHello():
+    return "Working :)"
+
 @app.route("/get-containers",methods=['GET'])
 def getConainers():
     lat = request.args.get('lat')
@@ -19,7 +23,7 @@ def getConainers():
         containers[i] = int(containers[i])
     containers = set(containers)
     print(containers)
-    locations = getLocationsInRange((lat,lng),containerData,400,containers)
+    locations = getLocationsInRange((lat,lng),containerData,4000,containers)
 
     for location in range(len(locations)):
         locations[location]['types'] = list(locations[location]['types'])
