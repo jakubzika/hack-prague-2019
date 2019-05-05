@@ -14,7 +14,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
       </button>
       <div class="img-container">
-        <img v-bind:src="require(`@/assets/trash/${cur.src}.png`)" v-bind:alt="cur.name">
+        <img v-bind:src="require(`@/assets/trash-svg/${cur.src}.svg`)" v-bind:alt="cur.name">
       </div>
       <div class="bottom-nav">
         <input type="checkbox" v-model="checked">
@@ -41,49 +41,49 @@ export default {
       cur: null,
       containers: [
         {
-          src: "green",
+          src: "glass",
           name: "Color glass",
           check: false,
           enum: "1"
         },
         {
-          src: "white",
+          src: "electric-devices",
           name: " Electric devices",
           check: false,
           enum: "2"
         },
         {
-          src: "grey",
+          src: "metals",
           name: "Metals",
           check: false,
           enum: "3"
         },
         {
-          src: "white",
+          src: "beverage-cartons",
           name: "Beverage cartons",
           check: false,
           enum: "4"
         },
         {
-          src: "blue",
+          src: "paper",
           name: "Paper",
           check: false,
           enum: "5"
         },
         {
-          src: "yellow",
+          src: "plastic",
           name: "Plastic",
           check: false,
           enum: "6"
         },
         {
-          src: "green",
+          src: "glass",
           name: "Clear glass",
           check: false,
           enum: "7"
         },
         {
-          src: "white",
+          src: "textile",
           name: "Textile",
           check: false,
           enum: "8"
