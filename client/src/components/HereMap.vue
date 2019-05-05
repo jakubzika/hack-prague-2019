@@ -1,12 +1,12 @@
 <template>
   <div class="here-map">
     <div ref="map" v-bind:style="{ width: width, height: height }"></div>
-    <!-- <button class="backHome" @click="getStart">Current position</button> -->
+    <button class="backHome" @click="getStart">Current position</button>
   </div>
 </template>
 
 <script>
-import {generateMarkerBlob} from '../generateMarkerBlob.js';
+import { generateMarkerBlob } from '../generateMarkerBlob.js';
 import { constants } from 'fs';
 export default {
   name: "HereMap",
@@ -136,10 +136,6 @@ export default {
               this.map.addObject(marker);
             }
             }).catch((err)=>{console.log('error occured',err)})
-          this.map.setCenter({
-            lat: cord.coords.latitude,
-            lng: cord.coords.longitude
-          });
           let svgMarkup =
             '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
           let icon = new H.map.Icon(svgMarkup);
@@ -148,7 +144,6 @@ export default {
             this.map.removeObject(me);
           }
           me = new H.map.Marker(coords, { icon: this.svgLocationMarker });
-          console.log("add me");
           this.map.addObject(me);
           if (!this.firstTime) {
             this.axios({
@@ -184,7 +179,7 @@ export default {
               lng: cord.coords.longitude
             });
             this.map.setZoom(17);
-            this.firstTime = true;
+            this.firstTime = false;
           }
         }},
         err => {
@@ -218,7 +213,7 @@ export default {
 }
 
 .backHome {
-  position: absolute;
+  position: fixed;
   left: 50%;
   bottom: 30px;
   transform: translateX(-50%);

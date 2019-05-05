@@ -139,7 +139,7 @@ export default {
         router.push({
           path: '/',
           query: {
-            containers: res,
+            containers: res.join(','),
             lat: this.cord.latitude,
             lng: this.cord.longitude
           }
@@ -176,6 +176,7 @@ img {
   left: 50%;
   transform: translateX(-50%);
   z-index: -1;
+  padding-bottom: 50px;
 }
 
 .container {
@@ -202,20 +203,30 @@ img {
   width: 100%;
 }
 
-.arrow {
-  padding: 0 20px;
+.arrow:first-child {
+  padding-left: 20px;
 }
 
+.arrow:nth-child(2) {
+  padding-right: 20px;
+}
 .send {
-  background: rgb(15, 172, 112);
+  background: white;
   padding: 10px 25px;
-  border-radius: 50px;
-  font-weight: bold;
+  font-weight: 900;
+  text-transform: uppercase;
   font-size: 1.3em;
   align-self: flex-start;
+  border: 5px solid rgb(37, 37, 37);
   margin: auto;
-  color: white;
+  color: rgb(37, 37, 37);
   margin-left: 50px;
+}
+
+.send:hover {
+  background: rgb(214, 212, 212);
+  border-color: black;
+  color: black;
 }
 
 button svg {
@@ -235,6 +246,7 @@ button svg:hover {
   bottom: 20%;
   z-index: 1;
   display: flex;
+  white-space: nowrap;
 }
 
 input {
@@ -253,8 +265,7 @@ input[type=checkbox]:before {
   height: 30px;
   bottom: 0;
   left: 0;
-  border: 3px solid #6d6b6b;
-  border-radius: 3px;
+  border: 4px solid #2c2a2a;
   background-color: white;
 }
 
@@ -263,7 +274,7 @@ input[type=checkbox]:checked:after {
   display: block;
   width: 10px;
   height: 17px;
-  border: solid rgb(85, 85, 85);
+  border: solid rgb(53, 52, 52);
   border-width: 0 5px 5px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
