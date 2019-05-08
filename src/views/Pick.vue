@@ -111,8 +111,7 @@ export default {
         return
       }, {
         enableHighAccuracy : true,
-        timeout : 60000,
-        maximumAge : 0
+        maxAge: 1000 * 2
       });
     } else {
       alert("Your phone does not support the Geolocation API");
