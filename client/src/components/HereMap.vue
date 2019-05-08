@@ -86,7 +86,6 @@ export default {
     addBubble(evt){
           // event target is the marker itself, group is a parent event target
           // for all objects that it contains
-          console.log('evt data',evt.target.getPosition());
           let bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
             // read custom data
             content: evt.target.getData()
@@ -97,30 +96,28 @@ export default {
           // bubble.open();
     },
     addToGroup(coordinate, html) {
-      console.log("add to group", coordinate);
-
         let marker = new H.map.Marker(coordinate,{icon: this.svgMarker});
         marker.setData(html);
 
 
-      console.log("group", this.group);
       this.markers.addObject(marker);
-      console.log("added to group");
     },
     updatePosition() {
       let me = null
       this.geoLoc = navigator.geolocation.watchPosition(cord => {
         console.log(cord);
         this.curPos = {lat:cord.coords.latitude,lng:cord.coords.longitude};
-        if (me) { this.map.removeObject(me) }
         let svgMarkup ='<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
         let icon = new H.map.Icon(svgMarkup);
         let coords = this.curPos;
-        me = new H.map.Marker(coords, { icon: this.svgLocationMarker });
-        this.map.addObject(me);
+        if (!me) {
+          me = new H.map.Marker(coords, { icon: this.svgLocationMarker });
+          this.map.addObject(me) 
+        }
+        if (me) { me.setPosition(this.curPos) }
         if (this.show && this.firstTime) {
           this.axios({
-            url: "http://192.168.81.74:5000/get-containers",
+            url: "http://localhost:5000/get-containers",
             method: "get",
             params: {
               lat: this.curPos.lat,
@@ -130,8 +127,6 @@ export default {
           })
             .then(data => {
               let containers = data.data.data;
-              // console.log(containers);
-              console.log('PUBLIC',this.$route.query.public);
               for (let i = 0; i < containers.length; i++) {
                 if(this.$route.query.public == 'false' ||this.$route.query.public == false) {
                   this.addToGroup(
@@ -169,14 +164,12 @@ export default {
         },
         {
           enableHighAccuracy: true,
-          timeout: 60000,
-          maximumAge: 0
         }
       );
     },
     getStart() {
       this.map.setCenter(this.curPos);
-      this.map.setZoom(19);
+      this.map.setZoom(17);
     }
   },
   mounted() {
@@ -197,16 +190,16 @@ export default {
   position: fixed;
   left: 50%;
   bottom: 30px;
+  border: 4px solid rgb(31, 30, 30);
+  text-transform: uppercase;
+  font-weight: 900;
   transform: translateX(-50%);
   white-space: nowrap;
-  background: rgb(15, 172, 112);
+  background: white;
   padding: 10px 25px;
-  border-radius: 50px;
-  font-weight: bold;
-  font-size: 1.3em;
   align-self: flex-start;
   margin: auto;
-  color: white;
+  color: rgb(31, 29, 29);
 }
 
 .containerBlob {

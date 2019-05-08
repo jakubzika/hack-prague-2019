@@ -23,7 +23,7 @@ def getConainers():
         containers[i] = int(containers[i])
     containers = set(containers)
     print(containers)
-    locations = getLocationsInRange((lat,lng),containerData,4000,containers)
+    locations = getLocationsInRange((lat,lng),containerData,300,containers)
 
     for location in range(len(locations)):
         locations[location]['types'] = list(locations[location]['types'])
