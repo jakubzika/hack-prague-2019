@@ -11,7 +11,7 @@ containerData = []
 
 @app.route('/',methods=['GET'])
 def indexHello():
-    return "Workingss :)"
+    return "Working :)"
 
 @app.route("/get-containers",methods=['GET'])
 def getConainers():
